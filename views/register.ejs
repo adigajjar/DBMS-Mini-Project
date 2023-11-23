@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/style-register.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>BlogUp</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="left">
+
+                BlogUp
+
+            </div>
+            <div class="right">
+                <ul>
+                    <li><a href  = "/">Home</a></li>
+                    <li><a href  = "/about-us">About Us</a></li>
+                    <li><a href="/register">Register</a></li>
+                    <li><a href  = "/sign-in">Sign In</a></li>
+                </ul>
+
+            </div>
+        </nav>
+
+    </header>
+    <main>
+        <div class="container">
+            <form action="/auth/register" method = "POST">
+                <input type="email" name="email" id="email" placeholder="Email">
+                <input type="text" name="name" id="name" placeholder="Username">
+                <input type="password" name="password" id="password" placeholder="Password">
+                <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password">
+                <button type="submit">Register</button>
+            </form>
+            <% if (typeof message !== 'undefined') { %>
+                <h4 class="alert alert-danger mt-4"> <%= message %> </h4>
+            <% } %>
+        </div>
+        
+    </main>
+
+    <script src = '../controllers/auth.js'></script>
+</body>
+
+</html>
+

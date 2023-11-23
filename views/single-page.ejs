@@ -1,0 +1,35 @@
+<%
+let blog = {
+    title: 'Sample Blog Post',
+    date: 'November 18, 2023',
+    content: `
+        <p>This is a sample blog post content. It can include paragraphs, images, and any HTML content you want.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id quam id tortor convallis imperdiet. Nulla facilisi.</p>
+        <img src="https://example.com/sample-image.jpg" alt="Sample Image">
+        <p>Donec auctor odio nec urna suscipit, nec mattis sapien pharetra. Sed euismod fringilla justo vel feugiat.</p>
+    `,
+};
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= blog.title %></title>
+    <link href="/style-page.css" rel = 'stylesheet'>
+</head>
+<body>
+
+    <header>
+        <h1><%= blog.title %></h1>
+        <p>Published on <%= blog.date %></p>
+    </header>
+
+    <article>
+        <%- blog.content %>
+    </article>
+
+</body>
+</html>
+
+

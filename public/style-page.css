@@ -1,0 +1,32 @@
+/* Reset some default browser styles */
+body, h1, p, ul {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+
+article {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+  article {
+      padding: 10px;
+  }
+}

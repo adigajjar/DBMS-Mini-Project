@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Blog Post</title>
+    <!-- Include Quill.js CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="/style-edit.css" rel = 'stylesheet'>
+</head>
+<body>
+
+    <h1>Write a Blog Post</h1>
+
+    <form action="/submit" method="post">
+        <label for="postTitle">Title:</label>
+        <input type="text" id="postTitle" name="postTitle" required>
+
+        <!-- Category Section -->
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="technology">Technology</option>
+            <option value="travel">Travel</option>
+            <option value="food">Food</option>
+            <option value="sports">Sports</option>
+            <option value="science">Science</option>
+            <!-- Add more categories as needed -->
+        </select>
+
+        <!-- Create a container for the Quill editor -->
+        <div id="editor"></div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Include Quill.js JavaScript -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script>
+        // Initialize Quill
+        var quill = new Quill('#editor', {
+            theme: 'snow' // 'snow' is just one of the available themes
+        });
+
+        // Optional: Add an event listener to log the editor content when the form is submitted
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var content = quill.root.innerHTML;
+            console.log('Blog Content:', content);
+
+            // Include logic to submit the form data to the server using AJAX or traditional form submission
+            // Example: Use fetch API for a simple AJAX request
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: document.getElementById('postTitle').value,
+                    category: document.getElementById('category').value,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Server Response:', data))
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+</body>
+</html>
