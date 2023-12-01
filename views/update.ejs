@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Username and Password</title>
+    <link href = "/style-update.css" rel = 'stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Username</h2>
+
+        <!-- Update Username and Password Form -->
+        <form action="/auth/update" method="post">
+            <label for="oldUsername">Old Username:</label>
+            <input type="text" id="oldUsername" name="oldUsername" required>
+
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" name="newUsername" required>
+
+            <button type="submit">Update Username</button>
+            <% if (typeof message !=='undefined' ) { %>
+                <h4 class="alert alert-danger mt-4">
+                    <%= message %>
+                </h4>
+            <% } %>
+        </form>
+    </div>
+</body>
+</html>

@@ -3,13 +3,18 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-dotenv.config({path: './.env'});
+const express = require('express');
+const app = express();
+
+
+
+dotenv.config({ path: './.env' });
 
 const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.SQL_PASS,
-    database: process.env.DATABASE  
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.SQL_PASS,
+  database: process.env.DATABASE
 });
 
 // exports.register = (req, res) => {
@@ -33,37 +38,38 @@ const db = mysql.createConnection({
 //     });
 //   });
 // };
-exports.register = (req,res) =>{
+
+exports.register = (req, res) => {
   console.log(req.body);
-  const {name, email, password, passwordConfirm} = req.body;
+  const { name, email, password, passwordConfirm } = req.body;
 
-  db.query('SELECT user_email FROM user_table WHERE user_email = ?',[email], async (error, results) =>{
-      if(error){
-          console.log(error);
-      }
-      if(results.length > 0){
-          return res.render('register',{
-              message: 'That email is already in use'
-          })
-      }else if(password !== passwordConfirm){
-          return res.render('register',{
-             message: 'Passwords do not match' 
-          });
-      }
-      let hashedPassword = await bcrypt.hash(password, 8);
-      console.log(hashedPassword);
-
-      db.query("INSERT INTO user_table SET ?", {user_name: name, user_email: email, user_password: hashedPassword},(error, results)=>{
-          if(error){
-              console.log(error);
-          }
-          else{
-              console.log(results);
-              return res.render('register',{
-                  message:'User Registered'
-              })
-          }
+  db.query('SELECT user_email FROM user_table WHERE user_email = ?', [email], async (error, results) => {
+    if (error) {
+      console.log(error);
+    }
+    if (results.length > 0) {
+      return res.render('register', {
+        message: 'That email is already in use'
       })
+    } else if (password !== passwordConfirm) {
+      return res.render('register', {
+        message: 'Passwords do not match'
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 8);
+    console.log(hashedPassword);
+
+    db.query("INSERT INTO user_table SET ?", { user_name: name, user_email: email, user_password: hashedPassword }, (error, results) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(results);
+        return res.render('register', {
+          message: 'User Registered'
+        })
+      }
+    })
 
   });
 }
@@ -113,20 +119,64 @@ exports.login = (req, res) => {
         message: 'Email or password is incorrect',
       });
     } else {
-      return res.render('sign-in', {
-        message: 'Login successful!',
-        user: results[0],
-      });
+      res.render('single-page');
+
     }
   });
 };
+// app.get('/single-page', (req, res) => {
+//   // Check if the user is authenticated
+//   if (req.session.user) {
+//     res.render('single-page', { user: req.session.user });
+//   } else {
+//     // If not authenticated, redirect to the login page
+//     res.redirect('/login');
+//   }
+// });
+
+exports.update = async (req, res) => {
+  console.log(req.body);
+  const { oldUsername, newUsername} = req.body;
+
+    db.query('SELECT * FROM user_table WHERE user_name = ?', [oldUsername], async (error, results) => {
+      if (error) {
+        console.error('Error executing select query:', error);
+        return res.status(500).send('Internal Server Error');
+      }
+
+      console.log('Results from select query:', results);
+
+      if (results.length === 0) {
+        console.error('User not found. Update failed.');
+        return res.render('update', {
+          message: 'Invalid old username or password. Update failed.'
+        });
+      }
+
+      db.query('UPDATE user_table SET user_name = ? WHERE user_name = ?', [newUsername, oldUsername], (error, updateResults) => {
+        if (error) {
+          console.error('Error updating username:', error);
+          return res.render('update', {
+            message: 'Failed to update username.'
+          });
+        }
+        console.log('Username update results:', updateResults);
+
+        return res.render('update', {
+          message: 'Username updated successfully!'
+        });
+      });
+    });
+}
 
 
 
 
-exports.logout = (req, res) => {
-  res.clearCookie("access_token",{
-    sameSite:"none",
-    secure:true
-  }).status(200).json("User has been logged out.")
-};
+
+// exports.logout = (req, res) => {
+//   res.clearCookie("access_token", {
+//     sameSite: "none",
+//     secure: true
+//   }).status(200).json("User has been logged out.")
+// };
+//

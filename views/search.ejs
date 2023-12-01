@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style-search.css">
+    <title>Blogging</title>
+</head>
+<body>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search');
+    const posts = document.querySelectorAll('.post');
+
+    searchInput.addEventListener('input', function () {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        posts.forEach(function (post) {
+            const postContent = post.textContent.toLowerCase();
+
+            if (postContent.includes(searchTerm)) {
+                post.style.display = 'block';
+            } else {
+                post.style.display = 'none';
+            }
+        });
+    });
+});
+
+
+</script>
+    <header>
+        <h1>BlogUp</h1>
+    </header>
+    
+    <nav>
+    <input type="text" id="search" placeholder="Search...">
+</nav>
+
+<section id="content">
+    <article class="post">
+        <h2>10 Tips for Healthy Living</h2>
+        <p>Living a healthy lifestyle is essential for your overall well-being...</p>
+    </article>
+
+    <article class="post">
+        <h2>The Future of Artificial Intelligence</h2>
+        <p>Artificial Intelligence is rapidly advancing, shaping the future in various industries...</p>
+    </article>
+
+    <article class="post">
+        <h2>Exploring the Wonders of Nature</h2>
+        <p>Nature has an incredible way of captivating our senses and inspiring awe...</p>
+    </article>
+
+</section>
+
+    <footer>
+        <p></p>
+    </footer>
+</body>
+</html>

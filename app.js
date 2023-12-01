@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
+const session = require('express-session');
+const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 
 dotenv.config({path: './.env'});
@@ -34,4 +36,9 @@ db.connect((error)=>{
 
 app.use('/',require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/blog_post', require('./routes/blog_post'));
+
+
 app.listen(3000);

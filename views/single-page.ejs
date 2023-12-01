@@ -1,35 +1,142 @@
-<%
-let blog = {
-    title: 'Sample Blog Post',
-    date: 'November 18, 2023',
-    content: `
-        <p>This is a sample blog post content. It can include paragraphs, images, and any HTML content you want.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur id quam id tortor convallis imperdiet. Nulla facilisi.</p>
-        <img src="https://example.com/sample-image.jpg" alt="Sample Image">
-        <p>Donec auctor odio nec urna suscipit, nec mattis sapien pharetra. Sed euismod fringilla justo vel feugiat.</p>
+<% const blog={ name: "Exploring the Wonders of Nature" , date: "November 28, 2023" , content: ` <p>Welcome to my blog
+    where I share my adventures in the great outdoors. Today, I want to talk about the mesmerizing beauty of nature and
+    the lessons we can learn from it.</p>
+    <p>Whether it's the vibrant colors of autumn leaves or the serene sound of a babbling brook, nature has a unique way
+        of captivating our senses and providing a sense of tranquility.</p>
+    <p>During my recent hike, I stumbled upon a hidden waterfall tucked away in the heart of the forest. The experience
+        was truly magical, and it reminded me of the importance of exploration and discovery.</p>
+    <p>As I sat by the waterfall, I reflected on the simplicity of nature and how it contrasts with our busy, modern
+        lives. It's a reminder to slow down, appreciate the small moments, and connect with the world around us.</p>
+    <p>Join me on this journey of exploration and let's marvel at the wonders that nature has to offer. Stay tuned for
+        more stories and insights from my outdoor escapades!</p>
     `,
-};
-%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= blog.title %></title>
-    <link href="/style-page.css" rel = 'stylesheet'>
-</head>
-<body>
+    };
+    %>
 
-    <header>
-        <h1><%= blog.title %></h1>
-        <p>Published on <%= blog.date %></p>
-    </header>
+    <!DOCTYPE html>
+    <html lang="en">
 
-    <article>
-        <%- blog.content %>
-    </article>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            <%= blog.name %>
+        </title>
+        <link href="/style-page.css" rel='stylesheet'>
+        <script href='../controllers/auth.js'>
 
-</body>
-</html>
+        </script>
+    </head>
+
+    <body>
+
+        <header>
+            <h1>
+                <%= blog.name %>
+            </h1>
+            <p>Published on <%= blog.date %>
+            </p>
+        </header>
+
+        <section id="imageSection">
+            <img src="https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-nature-mountain-scenery-with-flowers-free-photo.jpg?w=600&quality=80"
+                alt="Blog Image">
+            <button type="favorite" id="favoriteBtn" onclick="toggleFavorite()">
+                Favorite
+            </button>
+            <% if (typeof message !=='undefined' ) { %>
+                <h4 class="alert alert-danger mt-4">
+                    <%= message %>
+                </h4>
+                <% } %>
+        </section>
+
+        <article>
+            <%- blog.content %>
+        </article>
+
+        <section id="commentsSection">
+            <h2>Comments</h2>
+            <ul id="commentsList"></ul>
+            <form id="commentForm" action="/blog_post/addComment" method="POST">
+                <!-- Include hidden input fields for post_id and author_id -->
+                <input type="hidden" id="post_id" name="post_id" value="<%= blog.post_id %>">
+                <input type="hidden" id="author_id" name="author_id" value="<%= blog.author_id %>">
+
+                <label for="commentInput">Add a Comment:</label>
+                <input type="text" id="commentInput" name="content" required>
+                <button type="submit">Publish</button>
+            </form>
+        </section>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const commentForm = document.getElementById('commentForm');
+                const commentsList = document.getElementById('commentsList');
+
+                commentForm.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    this.submit();
+
+                    const commentInput = document.getElementById('commentInput');
+                    const commentText = commentInput.value;
+
+                    if (commentText.trim() !== '') {
+                        // Create a new list item for the comment
+                        const newComment = document.createElement('li');
+                        newComment.textContent = commentText;
+
+                        // Append the comment to the comments list
+                        commentsList.appendChild(newComment);
+
+                        // Clear the comment input field
+                        commentInput.value = '';
+                    }
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const favoriteBtn = document.getElementById('favoriteBtn');
+
+                favoriteBtn.addEventListener('click', function () {
+                    toggleFavorite();
+                });
+            });
+
+            function toggleFavorite() {
+                const post_id = 1;
+                const user_id = 7;
+
+                // Disable the button to prevent multiple clicks
+                const favoriteBtn = document.getElementById('favoriteBtn');
+                favoriteBtn.disabled = true;
+
+                // Send the post_id and user_id to the backend
+                fetch('/blog_post/addFavorite', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ post_id, user_id }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response, you might want to update UI or show a message
+                        console.log(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Re-enable the button after the request is complete
+                        favoriteBtn.disabled = false;
+                    });
+            }
+
+        </script>
 
 
+    </body>
+
+    </html>
